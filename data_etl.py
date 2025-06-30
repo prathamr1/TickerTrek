@@ -2,8 +2,9 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 from typing import Optional, Dict, Any, Tuple
+from dataclasses import dataclass
 
-
+@dataclass()
 class StockData:
     """Data to hold stock information"""
 
@@ -63,7 +64,7 @@ class StockData:
                 'daily_return_mean': returns.mean(),
                 'daily_return_std': returns.std(),
                 'sharpe_ratio': sharpe_ratio,
-                'max_drawdown': max_drawdown
+                'max_draw_down': max_drawdown
             }
         except Exception as e:
             st.write(f"Error while retrieving{self.data}:{str(e)}")

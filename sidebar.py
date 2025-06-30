@@ -3,11 +3,9 @@ from typing import Tuple, Dict
 import sys
 import os
 
-from scipy.constants import minute
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('C:\\Users\prath\Desktop\TickerTrek2'))))
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('C:\Users\prath\Desktop\TickerTrek2'))))
-
-from config.settings import POPULAR_STOCKS, PERIOS_OPTIONS
+from config import POPULAR_STOCKS, PERIOD_OPTIONS
 
 
 def render_sidebar() -> Tuple[str, str, Dict]:
@@ -19,7 +17,7 @@ def render_sidebar() -> Tuple[str, str, Dict]:
 
     if selected_quick_stock:
         stock_symbol = selected_quick_stock
-    period = render_period_selection()
+    period = render_period_selections()
 
     chart_options = render_chart_options()
     technical_options = render_technical_indicators()
@@ -114,7 +112,7 @@ def render_chart_options() -> Dict:
 
     return {
         'chart_type': chart_type,
-        'show_volume': show_ma,
+        'show_volume': show_volume,
         'show_ma': show_ma,
         'colour scheme': colour_scheme
     }
