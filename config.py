@@ -5,7 +5,7 @@ contains configuration static values and settings for trek_app.py
 
 PAGE_CONFIG={
     "page_title": "TickerTrek",
-    "page icon":"📈",
+    "page_icon":"📈",
     "layout":"wide",
     "initial_sidebar_state":"expanded",
     "menu_items":{

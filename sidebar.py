@@ -45,7 +45,7 @@ def render_stock_input() -> str:
 
 
 def render_quick_select_buttons() -> str:
-    st.sidebar.write("**Quicl Select Popular Stocks**")
+    st.sidebar.write("**Quick Select Popular Stocks**")
 
     cols = st.sidebar.columns(2)
     for i, (name, symbol) in enumerate(POPULAR_STOCKS.items()):

@@ -70,6 +70,7 @@ class StockData:
             st.write(f"Error while retrieving{self.data}:{str(e)}")
             return {}
 
+
 class StockDataManage:
 
     def __init__(self):
@@ -77,32 +78,50 @@ class StockDataManage:
         self.realtime_cache_ttl = 60 #1 min chace for realtime data
 
     @st.cache_data(ttl=300)
-
-    def get_stock_data(self,symbol:str, period: str = "1y")-> StockData:
+    def get_stock_data(_self,_symbol: str, period: str = "1y") -> StockData:
         try:
-            symbol = symbol.upper().strip()
-            if not symbol:
-                raise ValueError("Empty stock Symbol")
+            ticker_symbol = _symbol.upper().strip()
+            if not ticker_symbol:
+                raise ValueError("Empty stock symbol")
 
-            stock = yf.Ticker(symbol)
+            stock = yf.Ticker(ticker_symbol)
 
-            data = stock.history(period=period)
+            try:
+                data = stock.history(period=period)
+            except (KeyError, IndexError, ValueError) as e:
+                st.error(f"Error retrieving historical data: {e}")
+                return StockData(symbol=ticker_symbol, data=pd.DataFrame(), info={}, current_price=0.0)
+
             if data.empty:
-                raise ValueError(f"Please check with symbol/ticker name or no data founf for the ticker")
+                st.warning(f"No data found for the ticker '{ticker_symbol}'")
+                return StockData(symbol=ticker_symbol, data=pd.DataFrame(), info={}, current_price=0.0)
 
-            info = self._safe_get_info(stock)
-            current_price = self._get_current_price(stock,data)
+            # Safe info extraction
+            try:
+                info = stock.info
+            except (KeyError, ValueError):
+                info = {}
+
+            # Get current price
+            try:
+                current_price = data["Close"].iloc[-1]
+            except (KeyError, IndexError):
+                current_price = 0.0
 
             return StockData(
-            symbol=symbol,
-            data=data,
-            info=info,
-            current_price=current_price
+                symbol=ticker_symbol,
+                data=data,
+                info=info,
+                current_price=current_price
             )
 
+        except ValueError as ve:
+            st.error(f"Input error for symbol '{_symbol}': {ve}")
         except Exception as e:
-            st.error(f"Error fetching data for {symbol}: {str(e)}")
-            return StockData(symbol,pd.DataFrame(),{},0.0)
+            st.error(f"Unexpected error fetching data for '{_symbol}': {type(e).__name__} - {str(e)}")
+
+        return StockData(symbol=_symbol, data=pd.DataFrame(), info={}, current_price=0.0)
+
     @staticmethod
     def _safe_get_info(stock) -> Dict[str, Any]:
             """Safely fetch stock info with error handling"""
@@ -118,7 +137,7 @@ class StockDataManage:
             return info
 
     @st.cache_data(ttl=60)
-    def _get_current_price(self,stock,historical_data : pd.DataFrame) -> float :
+    def get_current_price(_self,stock,historical_data : pd.DataFrame) -> float :
         try :
             real_time_data = stock.history(period='1d', interval='1m')
             if not real_time_data.empty:
@@ -132,9 +151,9 @@ class StockDataManage:
                 return float(historical_data['Close'].iloc[-1])
             return 0.
 
-    def refresh_real_time_data(self,symbol:str)-> Optional[float]:
+    def refresh_real_time_data(_self,symbol:str)-> Optional[float]:
         try:
-            self._get_current_price.clear()
+            _self.get_current_price.clear()
             stock = yf.Ticker(symbol.upper())
             real_time_data = stock.history(period='1d',interval='1m')
 

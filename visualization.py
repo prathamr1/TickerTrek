@@ -15,7 +15,7 @@ warnings.filterwarnings('ignore')
 plt.style.use('default')
 
 
-def render_main_chart(data: pd.DataFrame, ticker: str) -> plt.Figure:
+def render_main_chart(data: pd.DataFrame, ticker) -> plt.Figure:
     """Create simple price line chart."""
     fig, ax = plt.subplots(figsize=(12, 6))
 
@@ -33,7 +33,7 @@ def render_main_chart(data: pd.DataFrame, ticker: str) -> plt.Figure:
     return fig
 
 
-def render_volume_chart(data: pd.DataFrame, ticker: str) -> plt.Figure:
+def render_volume_chart(data: pd.DataFrame, ticker) -> plt.Figure:
     """Create simple volume bar chart."""
     fig, ax = plt.subplots(figsize=(12, 4))
 
@@ -170,7 +170,7 @@ def render_candlestick_chart(data: pd.DataFrame, ticker: str) -> plt.Figure:
     return fig
 
 
-def render_rsi_chart(data: pd.DataFrame, ticker: str, period: int = 14) -> plt.Figure:
+def render_rsi_chart(data: pd.DataFrame, ticker, period: int = 14) -> plt.Figure:
     """Create RSI chart."""
     # Calculate RSI
     delta = data['Close'].diff()
