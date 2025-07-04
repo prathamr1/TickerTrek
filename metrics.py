@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('C:\\Users\prath
 
 from data_etl import StockData
 from utils import format_number, format_percentage, format_currency
-from config import FINANCIAL_METRICS
+#from config import FINANCIAL_METRICS
 
 
 def render_real_time_price(stock_data: StockData):
@@ -44,20 +44,20 @@ def render_real_time_price(stock_data: StockData):
             )
 
     with col2:
-        price_change = stock_data.get_price_change()
+        price_change, price_change_percent = stock_data.get_price_change()
         if price_change:
             st.metric(
                 label="Change ($)",
-                value=format_currency(price_change['change']),
-                delta=format_currency(price_change['change'])
+                value=format_currency(price_change),
+                delta=format_currency(price_change)
             )
 
     with col3:
         if price_change:
             st.metric(
                 label="Change (%)",
-                value=format_percentage(price_change['change_percent']),
-                delta=format_percentage(price_change['change_percent'])
+                value=format_percentage(price_change),
+                delta=format_percentage(price_change)
             )
 
 
@@ -71,7 +71,7 @@ def render_key_metrics(stock_data: StockData):
     st.subheader("📈 Key Financial Metrics")
 
     # Get financial metrics
-    metrics_data = stock_data.get_key_metrics()
+    metrics_data = stock_data.get_basic_stats()
 
     if not metrics_data:
         st.warning("Financial metrics data not available")
@@ -114,7 +114,7 @@ def render_trading_metrics(stock_data: StockData):
     """
     st.subheader("📊 Trading Metrics")
 
-    trading_data = stock_data.get_trading_metrics()
+    trading_data = stock_data.get_returns_analysis()
 
     if not trading_data:
         st.warning("Trading metrics data not available")

@@ -24,15 +24,19 @@ def format_number(num): #returns formatted string number T,M,K,B
 
 
 def format_currency(amount, currency_symbol="$"): #Returns formated percentage string
-    if pd.isna(amount):
-        return "N/A"
-    return f"{currency_symbol}{amount:,.2f}"
+    try:
+        amount = float(amount)
+        return f"{currency_symbol}{amount:,.2f}"
+    except ValueError:
+        return f"{currency_symbol}{amount}"
 
 
 def format_percentage(val,decimals=2):
-    if pd.isna(val):
+    try:
+        val = float(val)
+        return f"{val * 100:.{decimals}f}%"
+    except:
         return "N/A"
-    return f"{val * 100:.{decimals}f}%"
 
 
 def calculate_percentage_change(old_value,new_value):

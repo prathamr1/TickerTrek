@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import streamlit as st
-from typing import Optional, Dict, Any, Tuple
+from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
 @dataclass()
@@ -19,17 +19,17 @@ class StockData:
             self.data is not None and not self.data.empty
             and self.current_price>0
         )
-    def get_price_change(self)-> Tuple[float,float]:
+    def get_price_change(self)-> Dict[str,float]:
         """Calculate price and % change"""
         if len(self.data) < 2:
-            return 0.0,0.0
+            return {'Price Change':0.0,'Change %':0.0}
         try:
             prev_close = self.data['Close'].iloc[-2]
             price_change = self.current_price - prev_close
             price_change_p = (price_change/prev_close)*100
-            return price_change,price_change_p
+            return {'Price Change':price_change,'Change %':price_change_p}
         except (IndexError, ZeroDivisionError):
-            return 0.0,0.0
+            return {'Price Change':0.0,'Change %':0.0}
 
     def get_basic_stats(self)->Dict[str,float]:
         if not self.is_valid():
@@ -70,6 +70,22 @@ class StockData:
             st.write(f"Error while retrieving{self.data}:{str(e)}")
             return {}
 
+
+    def get_financial_ratios(self)-> dict:
+        data = self.data
+        return {
+            "P/E Ratio (TTM)": data.get("trailingPE", "-"),
+            "Forward P/E": data.get("forwardPE", "-"),
+            "Price-to-Book (P/B)": data.get("priceToBook", "-"),
+            "Price-to-Sales (P/S)": data.get("priceToSalesTrailing12Months", "-"),
+            "PEG Ratio": data.get("pegRatio", "-"),
+            "Enterprise Value/EBITDA": data.get("enterpriseToEbitda", "-"),
+            "EV/Revenue": data.get("enterpriseToRevenue", "-"),
+            "Return on Equity (ROE)": data.get("returnOnEquity", "-"),
+            "Return on Assets (ROA)": data.get("returnOnAssets", "-"),
+            "Profit Margin": data.get("profitMargins", "-"),
+            "Operating Margin": data.get("operatingMargins", "-")
+        }
 
 class StockDataManage:
 

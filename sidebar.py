@@ -38,9 +38,9 @@ def render_stock_input() -> str:
             help="Enter a valid stock ticker symbol"
         )
     with col2:
-        if st.button("Refresh", "Clear Cache and refresh the data"):
+        if st.button("GO"):
             st.cache_data.clear()
-            st.success("Cache Cleared")
+            #st.success("Cache Cleared")
         return stock_symbol.upper().strip() if stock_symbol else ""
 
 
