@@ -7,12 +7,12 @@ import pandas as pd
 import numpy as np
 from utils import format_number,calculate_percentage_change
 
-def render_recent_data(stock_data,num_rows=10):
+def render_recent_data(stock_data,num_rows=9):
     if stock_data.data is None or stock_data.data.empty:
         st.error("No data available to display")
         return ""
 
-    st.subheader("Recent Data")
+    st.subheader("⌛ Recent Data")
     recent_data = stock_data.data.tail(num_rows).copy()
     recent_data = recent_data.sort_index(ascending=False)
 
@@ -66,7 +66,7 @@ def render_statistics(stock_data):
         st.error("No data available for statistical analysis")
         return ""
 
-    st.subheader("Statistical Data Analysis")
+    st.subheader("📊 Statistical Data Analysis")
     data =stock_data.data['Close']
     stats_data= {
         'Metric': [
@@ -92,11 +92,11 @@ def render_statistics(stock_data):
             f"{data.tail(252).max():.2f}" if len(data) >= 252 else f"{data.max():.2f}",
             f"{data.tail(252).min():.2f}" if len(data) >= 252 else f"{data.min():.2f}",
             f"{calculate_volatility(data):.2f}",
-            format_number(stock_data.data['Volume'].mean())
+            f"{format_number(stock_data.data['Volume'].mean())}"
         ]
     }
-
     returns = data.pct_change().dropna()
+
     if len(returns) > 0 :
         stats_data['Metric'].extend(
             ['Sharpe Ratio(approx)','Max Drawdown','Positive days%'])
@@ -123,6 +123,7 @@ def render_statistics(stock_data):
                 use_container_width=True,
                 hide_index=True
             )
+    st.markdown("---")
 
 def render_performance_summary(stock_data):
     st.subheader("Performance summary")
@@ -143,7 +144,7 @@ def render_performance_summary(stock_data):
             change = calculate_percentage_change(past_price,current_price)
 
             if change > 0:
-                emoji = "🟢"
+                emoji = "🟩"
                 #color = "success"
             elif change < 0:
                 emoji = "🔴"
@@ -153,9 +154,9 @@ def render_performance_summary(stock_data):
 
             performance_data.append({
                 'Period': period_name,
-                'Return': f"{emoji} {change:+.2f}%",
-                'Start Price': f"${past_price:.2f}",
-                'Current Price': f"${current_price:.2f}"
+                'Start Price': f"{past_price:.2f}",
+                'Returns': f"{emoji} {change:+.2f}%",
+                'Current Price': f"{current_price:.2f}"
             })
 
     if performance_data:
@@ -168,7 +169,7 @@ def render_performance_summary(stock_data):
 
     else:
         st.info("Insufficient Data for performance analytics")
-
+    st.markdown("---")
 
 def calculate_volatility(prices,window=30):
     if not isinstance(prices,pd.Series):

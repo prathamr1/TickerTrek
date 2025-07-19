@@ -1,5 +1,5 @@
 import streamlit as st
-from typing import Tuple, Dict
+from typing import Tuple
 import sys
 import os
 
@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('C:\\Users\prath
 from config import POPULAR_STOCKS, PERIOD_OPTIONS
 
 
-def render_sidebar() -> Tuple[str, str, Dict]:
+def render_sidebar() -> Tuple[str, str]:
     # returns Tuple [stock_symbol, period, chart_options]
     st.sidebar.header("Stock Selection")
     stock_symbol = render_stock_input()
@@ -19,12 +19,9 @@ def render_sidebar() -> Tuple[str, str, Dict]:
         stock_symbol = selected_quick_stock
     period = render_period_selections()
 
-    chart_options = render_chart_options()
-    technical_options = render_technical_indicators()
-    chart_options.update(technical_options)
     render_additional_tools()
 
-    return stock_symbol, period, chart_options
+    return stock_symbol, period
 
 
 def render_stock_input() -> str:
@@ -34,7 +31,7 @@ def render_stock_input() -> str:
         stock_symbol = st.text_input(
             "Enter Stock Symbol:",
             value=st.session_state.get('stock_symbol', 'NVDA'),
-            placeholder="e.g. : AAPL, GOOGL, TSLA, MSFT",
+            placeholder="e.g. : AAPL, GOOGL",
             help="Enter a valid stock ticker symbol"
         )
     with col2:
@@ -50,7 +47,7 @@ def render_quick_select_buttons() -> str:
     cols = st.sidebar.columns(2)
     for i, (name, symbol) in enumerate(POPULAR_STOCKS.items()):
         col = cols[i % 2]
-        button_text = f"{symbol}\n{name}"
+        button_text = f"{name}"
         if col.button(
                 button_text,
                 key=f"quick_{symbol}",
@@ -63,29 +60,17 @@ def render_quick_select_buttons() -> str:
 
 
 def render_period_selections() -> str:
-    st.sidebar.header("Time Period")
-    selected_period = st.sidebar.selectbox(
+    with st.sidebar.expander("⏳ Time Settings", expanded=True):
+        selected_label = st.selectbox(
         "Select Time Period:",
-        list(PERIOD_OPTIONS.keys()),
+        options=list(PERIOD_OPTIONS.keys()),
         index=5,
-        help="CHoose the Time range for historical data"
+        key="sidebar_period_select",
+        help="Choose the time range for data"
     )
+    return PERIOD_OPTIONS[selected_label]
 
-    period_info = {
-        "1 Day": "Intraday data with 1-minute intervals",
-        "5 Days": "Recent week's trading data",
-        "1 Month": "Last month's daily data",
-        "3 Months": "Quarterly performance data",
-        "6 Months": "Half-year trend analysis",
-        "1 Year": "Annual performance overview",
-        "2 Years": "Two-year trend analysis",
-        "5 Years": "Long-term performance data"
-    }
-    if selected_period in period_info:
-        st.sidebar.caption(period_info[selected_period])
-    return PERIOD_OPTIONS[selected_period]
-
-
+"""
 def render_chart_options() -> Dict:
     st.sidebar.header("Chart Options")
     chart_type = st.sidebar.selectbox(
@@ -141,7 +126,7 @@ def render_technical_indicators() -> Dict:
         'show_bollinger': show_bollinger,
         'show_macd': show_macd
     }
-
+"""
 
 def render_additional_tools():
     st.sidebar.header("Additional tools")

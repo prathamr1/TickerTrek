@@ -23,19 +23,20 @@ def format_number(num): #returns formatted string number T,M,K,B
         return f"{num:.0f}"
 
 
-def format_currency(amount, currency_symbol="$"): #Returns formated percentage string
+def format_currency(amount): #Returns formated percentage string
     try:
         amount = float(amount)
-        return f"{currency_symbol}{amount:,.2f}"
+        return f"{amount:,.2f}"
     except ValueError:
-        return f"{currency_symbol}{amount}"
+        return f"{amount}"
 
 
 def format_percentage(val,decimals=2):
     try:
         val = float(val)
-        return f"{val * 100:.{decimals}f}%"
-    except:
+        return f"{val:.{decimals}f}%"
+    except ValueError:
+        print(f"Invalid value for percentage:{val}")
         return "N/A"
 
 

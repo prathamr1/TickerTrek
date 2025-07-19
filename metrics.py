@@ -8,6 +8,7 @@ import pandas as pd
 from typing import Dict, Any
 import sys
 import os
+from datetime import datetime
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('C:\\Users\prath\Desktop\TickerTrek2'))))
@@ -18,21 +19,18 @@ from utils import format_number, format_percentage, format_currency
 
 
 def render_real_time_price(stock_data: StockData):
-    """
-    Render real-time price section with current price and change
 
-    Args:
-        stock_data: StockData object containing stock information
-    """
-    st.subheader(f"📊 {stock_data.symbol} - Live Price")
+    st.subheader(f"⚪ {stock_data.symbol}")
 
     # Get company name if available
     company_name = stock_data.info.get('longName', stock_data.symbol)
     if company_name != stock_data.symbol:
         st.write(f"**{company_name}**")
-
+    now = datetime.now()
+    fdate = now.strftime("%Y-%m-%d - %H:%M")
+    st.write(f"🕐 Current Date & Time {fdate}")
     # Create columns for price display
-    col1, col2, col3 = st.columns([2, 1, 1])
+    col1, col2 = st.columns([2, 2])
 
     with col1:
         current_price = stock_data.current_price
@@ -40,34 +38,24 @@ def render_real_time_price(stock_data: StockData):
             st.metric(
                 label="Current Price",
                 value=format_currency(current_price),
-                delta=None
+                delta=format_currency(current_price),
+                delta_color="off",
+                border=True
             )
 
     with col2:
-        price_change, price_change_percent = stock_data.get_price_change()
-        if price_change:
-            st.metric(
-                label="Change ($)",
-                value=format_currency(price_change),
-                delta=format_currency(price_change)
+        price_change_data = stock_data.get_price_change()
+        price_change = price_change_data["Price Change"]
+        change_percent = price_change_data["Change %"]
+        st.metric(
+            label="Price Change",
+            value=format_currency(price_change),
+            delta=format_percentage(change_percent),
+            border=True
             )
-
-    with col3:
-        if price_change:
-            st.metric(
-                label="Change (%)",
-                value=format_percentage(price_change),
-                delta=format_percentage(price_change)
-            )
-
 
 def render_key_metrics(stock_data: StockData):
-    """
-    Render key financial metrics in a structured layout
 
-    Args:
-        stock_data: StockData object containing stock information
-    """
     st.subheader("📈 Key Financial Metrics")
 
     # Get financial metrics
@@ -83,7 +71,7 @@ def render_key_metrics(stock_data: StockData):
     metrics_layout = [
         ("Market Cap", "marketCap", col1),
         ("P/E Ratio", "trailingPE", col2),
-        ("EPS", "trailingEps", col3),
+        ("Earnings Per Share", "trailingEps", col3),
         ("Dividend Yield", "dividendYield", col4)
     ]
 
@@ -92,13 +80,13 @@ def render_key_metrics(stock_data: StockData):
             value = metrics_data.get(key)
             if value is not None:
                 if key == "marketCap":
-                    formatted_value = format_number(value, suffix=True)
+                    formatted_value = format_number(value)
                 elif key == "dividendYield":
-                    formatted_value = format_percentage(value)
+                    formatted_value = value
                 elif key == "trailingEps":
                     formatted_value = format_currency(value)
                 else:
-                    formatted_value = format_number(value, decimal_places=2)
+                    formatted_value = format_number(value)
 
                 st.metric(label=label, value=formatted_value)
             else:
@@ -127,14 +115,14 @@ def render_trading_metrics(stock_data: StockData):
         if volume:
             st.metric(
                 label="Volume",
-                value=format_number(volume, suffix=True)
+                value=format_number(volume)
             )
 
         avg_volume = trading_data.get('averageVolume')
         if avg_volume:
             st.metric(
                 label="Avg Volume (10d)",
-                value=format_number(avg_volume, suffix=True)
+                value=format_number(avg_volume)
             )
 
     with col2:
@@ -162,64 +150,6 @@ def render_trading_metrics(stock_data: StockData):
                 label="52W Low",
                 value=format_currency(week_52_low)
             )
-
-
-def render_financial_ratios(stock_data: StockData):
-    """
-    Render financial ratios and valuation metrics
-
-    Args:
-        stock_data: StockData object containing stock information
-    """
-    st.subheader("💰 Financial Ratios")
-
-    ratios_data = stock_data.get_financial_ratios()
-
-    if not ratios_data:
-        st.warning("Financial ratios data not available")
-        return
-
-    # Create two columns for ratios
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.write("**Valuation Ratios**")
-
-        ratios_left = [
-            ("P/E Ratio", "trailingPE"),
-            ("Forward P/E", "forwardPE"),
-            ("P/B Ratio", "priceToBook"),
-            ("P/S Ratio", "priceToSalesTrailing12Months")
-        ]
-
-        for label, key in ratios_left:
-            value = ratios_data.get(key)
-            if value is not None:
-                st.write(f"**{label}:** {format_number(value, decimal_places=2)}")
-            else:
-                st.write(f"**{label}:** N/A")
-
-    with col2:
-        st.write("**Profitability Ratios**")
-
-        ratios_right = [
-            ("ROE", "returnOnEquity"),
-            ("ROA", "returnOnAssets"),
-            ("Profit Margin", "profitMargins"),
-            ("Operating Margin", "operatingMargins")
-        ]
-
-        for label, key in ratios_right:
-            value = ratios_data.get(key)
-            if value is not None:
-                if "Margin" in label or key in ["returnOnEquity", "returnOnAssets"]:
-                    formatted_value = format_percentage(value)
-                else:
-                    formatted_value = format_number(value, decimal_places=2)
-                st.write(f"**{label}:** {formatted_value}")
-            else:
-                st.write(f"**{label}:** N/A")
-
 
 def render_metrics_summary(stock_data: StockData):
     """
@@ -275,13 +205,13 @@ def render_metrics_cards(metrics_dict: Dict[str, Any], title: str = "Metrics"):
                 # Format value based on metric type
                 if isinstance(metric_value, (int, float)):
                     if metric_name.lower() in ['volume', 'marketcap', 'shares']:
-                        formatted_value = format_number(metric_value, suffix=True)
+                        formatted_value = format_number(metric_value)
                     elif 'percent' in metric_name.lower() or 'yield' in metric_name.lower():
                         formatted_value = format_percentage(metric_value)
                     elif 'price' in metric_name.lower() or 'eps' in metric_name.lower():
                         formatted_value = format_currency(metric_value)
                     else:
-                        formatted_value = format_number(metric_value, decimal_places=2)
+                        formatted_value = format_number(metric_value)
                 else:
                     formatted_value = str(metric_value)
 
@@ -325,7 +255,7 @@ def render_comparison_metrics(stock_data_list: list, metric_keys: list):
         for col in df.columns:
             if col != 'Symbol':
                 formatted_df[col] = df[col].apply(
-                    lambda x: format_number(x, decimal_places=2) if pd.notna(x) else "N/A"
+                    lambda x: format_number(x) if pd.notna(x) else "N/A"
                 )
 
         st.dataframe(formatted_df, use_container_width=True)

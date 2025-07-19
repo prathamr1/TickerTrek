@@ -4,6 +4,9 @@ import streamlit as st
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
+from sidebar import render_sidebar
+
+
 @dataclass()
 class StockData:
     """Data to hold stock information"""
@@ -19,6 +22,8 @@ class StockData:
             self.data is not None and not self.data.empty
             and self.current_price>0
         )
+
+
     def get_price_change(self)-> Dict[str,float]:
         """Calculate price and % change"""
         if len(self.data) < 2:
@@ -31,18 +36,18 @@ class StockData:
         except (IndexError, ZeroDivisionError):
             return {'Price Change':0.0,'Change %':0.0}
 
+
+
     def get_basic_stats(self)->Dict[str,float]:
         if not self.is_valid():
             return{}
 
-        close_prices = self.data['Close']
+        #close_prices = self.data['Close']
         return {
-            'mean': close_prices.mean(),
-            'median': close_prices.median(),
-            'std': close_prices.std(),
-            'min': close_prices.min(),
-            'max' : close_prices.max(),
-            'current': self.current_price
+            "marketCap": self.info.get("marketCap"),
+            "trailingPE": self.info.get("trailingPE"),
+            "trailingEps": self.info.get("trailingEps"),
+            "dividendYield": self.info.get("dividendYield"),
         }
 
     def get_returns_analysis(self)->Dict[str,float]:
@@ -70,23 +75,6 @@ class StockData:
             st.write(f"Error while retrieving{self.data}:{str(e)}")
             return {}
 
-
-    def get_financial_ratios(self)-> dict:
-        data = self.data
-        return {
-            "P/E Ratio (TTM)": data.get("trailingPE", "-"),
-            "Forward P/E": data.get("forwardPE", "-"),
-            "Price-to-Book (P/B)": data.get("priceToBook", "-"),
-            "Price-to-Sales (P/S)": data.get("priceToSalesTrailing12Months", "-"),
-            "PEG Ratio": data.get("pegRatio", "-"),
-            "Enterprise Value/EBITDA": data.get("enterpriseToEbitda", "-"),
-            "EV/Revenue": data.get("enterpriseToRevenue", "-"),
-            "Return on Equity (ROE)": data.get("returnOnEquity", "-"),
-            "Return on Assets (ROA)": data.get("returnOnAssets", "-"),
-            "Profit Margin": data.get("profitMargins", "-"),
-            "Operating Margin": data.get("operatingMargins", "-")
-        }
-
 class StockDataManage:
 
     def __init__(self):
@@ -94,14 +82,25 @@ class StockDataManage:
         self.realtime_cache_ttl = 60 #1 min chace for realtime data
 
     @st.cache_data(ttl=300)
-    def get_stock_data(_self,_symbol: str, period: str = "1y") -> StockData:
+    def get_stock_data(_self,_symbol: str, period: str = '1y') -> StockData:
         try:
             ticker_symbol = _symbol.upper().strip()
             if not ticker_symbol:
                 raise ValueError("Empty stock symbol")
 
             stock = yf.Ticker(ticker_symbol)
+            #Live Data
+            if period=="live":
+                try:
+                    info=stock.fast_info
+                    current_price=info.get("last_price",0.0)
+                except Exception as e :
+                    st.error(f"Live data fetch error:  {e}")
+                    return StockData(symbol=ticker_symbol, data=pd.DataFrame(),info={},current_price=0.0)
+                data=pd.DataFrame([{"Live Price:":current_price,"Symbol":ticker_symbol}])
+                return  StockData(symbol=ticker_symbol,data=data,info=info,current_price=current_price)
 
+            #Historical Data
             try:
                 data = stock.history(period=period)
             except (KeyError, IndexError, ValueError) as e:
@@ -137,6 +136,20 @@ class StockDataManage:
             st.error(f"Unexpected error fetching data for '{_symbol}': {type(e).__name__} - {str(e)}")
 
         return StockData(symbol=_symbol, data=pd.DataFrame(), info={}, current_price=0.0)
+
+    def get_candlestick_data(self, ticker_symbol):
+        stock_data = self.get_stock_data(ticker_symbol)
+        df = stock_data.data
+
+        if 'Date' not in df.columns:
+            df = df.reset_index()
+        df.columns=[col.strip().capitalize() for col in df.columns]
+
+        required_cols = ['Date', 'Open', 'High', 'Low', 'Close']
+        if not all(col in df.columns for col in required_cols):
+            raise ValueError("Data is missing one or more required OHLC columns.")
+        df.dropna(subset=['Open','High','Low','Close'], inplace=True)
+        return df[required_cols]
 
     @staticmethod
     def _safe_get_info(stock) -> Dict[str, Any]:
