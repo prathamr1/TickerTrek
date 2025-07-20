@@ -2,11 +2,11 @@ import plotly.graph_objects as go
 from data_etl import StockDataManage
 import pandas as pd
 
-def plot_candlestick(ticker_symbol:str):
+def plot_candlestick(ticker_symbol:str, period: str = '1y'):
     manager = StockDataManage()
 
     try:
-        df = manager.get_candlestick_data(ticker_symbol)
+        df = manager.get_candlestick_data(ticker_symbol,period)
         if not pd.api.types.is_datetime64_any_dtype(df['Date']):
             df['Date'] = pd.to_datetime(df['Date'])
 
@@ -31,5 +31,5 @@ def plot_candlestick(ticker_symbol:str):
         )
         return fig
 
-    except Exception as e:
-        raise RuntimeError(f"Failed to render candlestick chart: {e}")
+    except Exception:
+        raise RuntimeError(f"Failed to render candlestick chart")

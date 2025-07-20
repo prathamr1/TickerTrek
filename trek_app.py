@@ -12,7 +12,7 @@ from streamlit_autorefresh import st_autorefresh
 sys.path.append(os.path.dirname(os.path.abspath('C:\\Users\prath\Desktop\TickerTrek2')))
 
 from config import PAGE_CONFIG, CUSTOM_CSS
-from sidebar import render_sidebar,render_period_selections
+from sidebar import render_sidebar
 from metrics import render_key_metrics, render_real_time_price
 from data_table import render_recent_data, render_statistics
 from data_etl import StockDataManage
@@ -29,12 +29,19 @@ def main():
     st.markdown("**🔸Real-time stock data, Financial Metrics, Statistical Analytics and Historical trends**")
 
     if 'stock_symbol' not in st.session_state:
-        st.session_state.stock_symbol = 'AAPL'
+        st.session_state.stock_symbol = 'NVDA'
+    if 'period' not in st.session_state:
+        st.session_state.period = '1y'
     stock_symbol, period = render_sidebar()  # Render sidebar and get user inputs
-    if period == "live":
-        st_autorefresh(interval=10_000, key="live_refresh")
+
     if stock_symbol:  # Update session state
         st.session_state.stock_symbol = stock_symbol
+    if period:
+        st.session_state.period = period
+
+    if st.session_state.period == "live":
+        st_autorefresh(interval=10_000, key="live_refresh")
+
     if st.session_state.stock_symbol:
         data_manager = StockDataManage()
 
@@ -43,7 +50,8 @@ def main():
         st.markdown("---")
         render_real_time_price(stock_data)
         st.markdown("---")
-        st.plotly_chart(plot_candlestick(stock_symbol))
+
+        st.plotly_chart(plot_candlestick(st.session_state.stock_symbol,st.session_state.period))
         st.markdown("---")
         render_key_metrics(stock_data)
         st.markdown("---")

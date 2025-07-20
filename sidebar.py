@@ -37,7 +37,7 @@ def render_stock_input() -> str:
     with col2:
         if st.button("GO"):
             st.cache_data.clear()
-            #st.success("Cache Cleared")
+            st.rerun()
         return stock_symbol.upper().strip() if stock_symbol else ""
 
 

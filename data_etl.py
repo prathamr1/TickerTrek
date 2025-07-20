@@ -3,10 +3,6 @@ import pandas as pd
 import streamlit as st
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
-
-from sidebar import render_sidebar
-
-
 @dataclass()
 class StockData:
     """Data to hold stock information"""
@@ -137,8 +133,8 @@ class StockDataManage:
 
         return StockData(symbol=_symbol, data=pd.DataFrame(), info={}, current_price=0.0)
 
-    def get_candlestick_data(self, ticker_symbol):
-        stock_data = self.get_stock_data(ticker_symbol)
+    def get_candlestick_data(self, ticker_symbol, period: str='1y'):
+        stock_data = self.get_stock_data(ticker_symbol,period)
         df = stock_data.data
 
         if 'Date' not in df.columns:
