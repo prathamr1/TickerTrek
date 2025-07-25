@@ -1,31 +1,34 @@
-# TickerTrek2
+# 📈 Ticker Trek - Historical Ticker analytics.
 
-**TickerTrek2** is a pre-release web application for tracking and visualizing stock prices in real time. Built with Streamlit and powered by robust Python libraries, it offers an intuitive dashboard for exploring financial data with just a few clicks.
+A user-friendly Streamlit app designed to make stock market data and analytics accessible to everyone — especially those new to **financial analysis**. 
+
+📑 This interactive dashboard provides real-time stock prices, historical trends, and simple visualizations to help users understand market movements without needing prior expertise.
+
+📊 Whether you're curious about how stocks behave or just starting your journey into financial analytics, this app offers a clean, intuitive interface to explore key metrics and build confidence in interpreting stock data. Perfect for learners, casual investors, or anyone seeking clarity in the world of finance.
+
+---
+
+## How it works ?
+
+Enter any valid ticker symbol and select appropriate time period from the sidebar.
+Hit *GO* and you are ready to explore the equities all around the globe.
+
 
 ## 🔧 Tech Stack
 
-- Python  
-- Streamlit  
-- yfinance (`yf`)  
-- pandas  
-- plotly  
+- Backend : Python
+- Frontend : Streamlit
+- Data Source : Yahoo Finance
+- Data Processing : pandas
+- Data Visuallisation : Plotly, Matplotlib
 
 ## 💡 Features
 
-- Live stock price tracking using Yahoo Finance
-- Interactive time-series plots
-- Clean dashboard UI with Streamlit
-- Responsive layout for desktop and mobile
+- Beginner friendly financial analytics.
+- Live stock price tracking using Yahoo Finance.
+- Interactive time-series plots.
+- Clean dashboard UI with Streamlit.
+- Responsive layout for desktop and mobile.
 
-## 🚀 Getting Started
-
-```bash
-# Clone the repository
-git clone https://github.com/prathamr1/TickerTrek2
-cd TickerTrek2
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the Streamlit app
-streamlit run app.py
+## 🪪 License
+This project is licensed under the [MIT License](LICENSE).
