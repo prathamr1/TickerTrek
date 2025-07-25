@@ -32,3 +32,6 @@ Hit *GO* and you are ready to explore the equities all around the globe.
 
 ## 🪪 License
 This project is licensed under the [MIT License](LICENSE).
+
+## Acknowledgments
+Built by [Prathamesh R](https://linkedin.com/in/prathamesh-renuse)
