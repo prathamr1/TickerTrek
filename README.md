@@ -35,3 +35,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
 Built by [Prathamesh R](https://linkedin.com/in/prathamesh-renuse)
+Feel free to create and open new issues.
+Suggestions for enhancements are welcome.
