@@ -1,6 +1,6 @@
 # 📈 Ticker Trek - Historical Ticker analytics.
 
-A user-friendly Streamlit app designed to make stock market data and analytics accessible to everyone — especially those new to **financial analysis**. 
+A user-friendly [Streamlit app](https://tickertrekpr.streamlit.app/) designed to make stock market data and analytics accessible to everyone — especially those new to **financial analysis**. 
 
 📑 This interactive dashboard provides real-time stock prices, historical trends, and simple visualizations to help users understand market movements without needing prior expertise.
 
