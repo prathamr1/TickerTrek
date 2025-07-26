@@ -1,10 +1,5 @@
 import streamlit as st
 from typing import Tuple
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('C:\\Users\prath\Desktop\TickerTrek2'))))
-
 from config import POPULAR_STOCKS, PERIOD_OPTIONS
 
 

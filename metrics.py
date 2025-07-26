@@ -6,17 +6,11 @@ Handles the display of key financial metrics and real-time price information
 import streamlit as st
 import pandas as pd
 from typing import Dict, Any
-import sys
-import os
 from datetime import datetime
 
-# Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('C:\\Users\prath\Desktop\TickerTrek2'))))
 
 from data_etl import StockData
 from utils import format_number, format_percentage, format_currency
-#from config import FINANCIAL_METRICS
-
 
 def render_real_time_price(stock_data: StockData):
 
