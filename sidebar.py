@@ -130,19 +130,6 @@ def render_technical_indicators() -> Dict:
 
 def render_additional_tools():
     st.sidebar.header("Additional tools")
-
-    with st.sidebar.expander("Export Options"):
-        st.write("**Available Formats:**")
-        col1, col2 = st.columns(2)
-
-        with col1:
-            if st.button("CSV", use_container_width=True):
-                st.session_state.export_format = 'csv'
-
-        with col2:
-            if st.button("Excel", use_container_width=True):
-                st.session_state.export_format = 'excel'
-
     with st.sidebar.expander("Price Alert"):
         alert_enabled = st.checkbox("Enable Price Alerts")
         if alert_enabled:
@@ -162,6 +149,7 @@ def render_additional_tools():
     with st.sidebar.expander("App settings"):
         auto_refresh = st.checkbox(
             "Auto-refresh the data",
+            value=True,
             help="Automatically refresh data every 2 minutes"
         )
         if auto_refresh:
@@ -175,7 +163,7 @@ def render_additional_tools():
 
         theme = st.selectbox(
             "App Theme:",
-            ["light", "Dark", "Auto"]
+            ["Light", "Dark", "Auto"]
         )
         st.session_state.theme = theme
 
@@ -183,11 +171,10 @@ def render_additional_tools():
         st.write("""
         **TickerTrek™️ is a comprehensive stock analysis tool built with:
         - **Real-time data** from Yahoo Finance
-        - **Technical indicators** for analysis
         - **Interactive charts** with Plotly
         - **Statistical analysis** tools
 
-        **GitHub:** [TickerTrek](https://github/prathamr1/TickerTrek2)
+        **GitHub:** [TickerTrek](https://github.com/prathamr1/TickerTrek)
         **Connect with me:**[LinkedIn](https://www.linkedin.com/in/prathamesh-renuse/)
         **Data Source:** [Yahoo Finance API](https://finance.yahoo.com/)
 
@@ -197,19 +184,20 @@ def render_additional_tools():
 
     if st.button("Help & Support"):
         st.info("""
-                **How to use :-**
+                **How to use :**
                 1. Enter a stock symbol(ticker name) or use quick select
                 2. Choose time period and chart options
-                3. Enable technical indicators as per your interests
-                4. Analyze the data and charts
+                3. Analyze the data and charts
 
-                **Tricks and Tips:-**
+                **Tricks and Tips:**
                     -To select a stock from different markets use : "TICKERNAME.STOCK_EXCHANGE_SYMBOL"
                          e.g. : Selecting TATAMOTORS from NSE(India) , enter **TATAMOTORS.NS**
 
                     -Use UPPERCASE symbols (such as AAPL,NVDA,etx.)
-                    -Try different time periods for various insights
-                    -Enable multiple indicators for enhanced analytics
+                    -Try different time periods for various insights.
+                    
+                **Issues and Support :**
+                    -Create issue [Github](https://github.com/prathamr1/TickerTrek)
                 """)
 
 # def render_market_summary():

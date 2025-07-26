@@ -26,7 +26,7 @@ def plot_candlestick(ticker_symbol:str, period: str = '1y'):
             title=f"{ticker_symbol.upper()} CandleStick",
             xaxis_title='Date',
             yaxis_title='Price',
-            xaxis_rangeslider_visible=True,
+            xaxis_rangeslider_visible=False,
             template="plotly_white"
         )
         return fig

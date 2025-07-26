@@ -165,7 +165,6 @@ POPULAR_STOCKS = {
 }
 
 PERIOD_OPTIONS = {
-    "Live":"live",
     "1 Day": "1d",
     "5 Days": "5d",
     "1 Month": "1mo",
@@ -242,89 +241,4 @@ COLOR_SCHEMES = {
         "background": "#F8F9FA",
         "text": "#2C3E50"
     }
-}
-
-# API Settings for yfinance
-API_SETTINGS = {
-    "YAHOO_FINANCE":{
-        "BASE_URL":"https://query1.finance.yahoo.com/v8/finance/chart/",
-        "RATE_LIMIT":2000,
-        "TIMEOUT":30,
-        "RETRY_ATTEMPTS":3
-    }
-}
-
-CACHE_SETTINGS = {
-    "HISTORICAL_DATA_TTL":300,
-    "REAL_TIME_DATA_TTL":60,
-    "COMPANY_INFO_TTL":3600,
-    "MAX_CACHE_SIZE":100
-}
-
-APP_SETTINGS = {
-    "VERSION":"1.0.0",
-    "DEBUG":False,
-    "LOG_LEVEL": "INFO",
-    "MAX_HISTORY_DAYS": 3650,
-    "DEFAULT_SYMBOL": "NVDA",
-    "DEFAULT_PERIOD": "1y",
-    "AUTO_REFRESH_INTERVAL": 300,
-    "MAX_SYMBOLS_PER_SESSION": 50
-}
-
-FINANCIAL_METRICS = {
-    "RISK_FREE_RATE": 0.02,  # 2% annual risk-free rate for Sharpe ratio
-    "TRADING_DAYS_PER_YEAR": 252,
-    "DECIMAL_PLACES": 2,
-    "PERCENTAGE_DECIMAL_PLACES": 3
-}
-
-ERROR_MESSAGES = {
-    "INVALID_SYMBOL": "Invalid stock symbol. Please check and try again.",
-    "NO_DATA": "No data available for the selected symbol and time period.",
-    "API_ERROR": "Error fetching data from Yahoo Finance. Please try again later.",
-    "NETWORK_ERROR": "Network error. Please check your connection and try again.",
-    "RATE_LIMIT": "Rate limit exceeded. Please wait before making more requests.",
-    "INVALID_PERIOD": "Invalid time period selected.",
-    "GENERAL_ERROR": "An unexpected error occurred. Please try again."
-}
-
-SUCCESS_MESSAGES = {
-    "DATA_LOADED": "Data loaded successfully!",
-    "CACHE_CLEARED": "Cache cleared successfully!",
-    "EXPORT_SUCCESS": "Data exported successfully!",
-    "ALERT_SET": "Price alert set successfully!"
-}
-
-HELP_TEXT = {
-    "STOCK_SYMBOL": "Enter a valid stock ticker symbol (e.g., AAPL, MSFT, GOOGL)",
-    "TIME_PERIOD": "Select the time range for historical data analysis",
-    "CHART_TYPE": "Choose how to display the stock price data",
-    "MOVING_AVERAGES": "Add trend lines showing average prices over time",
-    "RSI": "Momentum indicator showing overbought/oversold conditions (0-100)",
-    "BOLLINGER_BANDS": "Volatility bands around the moving average",
-    "VOLUME": "Trading volume shows market activity and liquidity",
-    "MACD": "Trend-following momentum indicator",
-    "EXPORT": "Download the data in CSV or Excel format"
-}
-
-VALIDATION = {
-    "MIN_SYMBOL_LENGTH": 1,
-    "MAX_SYMBOL_LENGTH": 10,
-    "ALLOWED_SYMBOL_CHARS": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-",
-    "MIN_PRICE": 0.01,
-    "MAX_PRICE": 1000000,
-    "MIN_VOLUME": 0,
-    "MAX_VOLUME": 10000000000
-}
-
-FEATURE_FLAGS = {
-    "ENABLE_REAL_TIME_ALERTS": True,
-    "ENABLE_PORTFOLIO_TRACKING": False,
-    "ENABLE_SOCIAL_FEATURES": False,
-    "ENABLE_ADVANCED_CHARTS": True,
-    "ENABLE_NEWS_INTEGRATION": False,
-    "ENABLE_FUNDAMENTAL_ANALYSIS": True,
-    "ENABLE_COMPARISON_TOOL": True,
-    "ENABLE_EXPORT_FEATURES": True
 }

@@ -56,7 +56,7 @@ def render_real_time_price(stock_data: StockData):
 
 def render_key_metrics(stock_data: StockData):
 
-    st.subheader("📈 Key Financial Metrics")
+    st.subheader("💲Key Financial Metrics")
 
     # Get financial metrics
     metrics_data = stock_data.get_basic_stats()
@@ -166,16 +166,13 @@ def render_metrics_summary(stock_data: StockData):
     st.divider()
 
     # Key metrics in tabs
-    tab1, tab2, tab3 = st.tabs(["Key Metrics", "Trading Data", "Financial Ratios"])
+    tab1, tab2 = st.tabs(["Key Metrics", "Trading Data"])
 
     with tab1:
         render_key_metrics(stock_data)
 
     with tab2:
         render_trading_metrics(stock_data)
-
-    with tab3:
-        render_financial_ratios(stock_data)
 
 
 def render_metrics_cards(metrics_dict: Dict[str, Any], title: str = "Metrics"):

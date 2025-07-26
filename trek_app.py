@@ -23,7 +23,7 @@ def main():
     st.set_page_config(**PAGE_CONFIG)
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
     st.markdown(
-        '<h1 class="main-header">💲TickerTrek - Stock Price Analytics</h1>',
+        '<h1 class="main-header">📈TickerTrek - Stock Price Analytics</h1>',
         unsafe_allow_html=True
     )
     st.markdown("**🔸Real-time stock data, Financial Metrics, Statistical Analytics and Historical trends**")
@@ -45,11 +45,10 @@ def main():
     if st.session_state.stock_symbol:
         data_manager = StockDataManage()
 
-        with st.spinner(f"Fetching data for {st.session_state.stock_symbol}..."):  # Fetch data with loading spinner
+        with st.spinner(f"Fetching data..."):  # Fetch data with loading spinner
             stock_data = data_manager.get_stock_data(st.session_state.stock_symbol, period)
         st.markdown("---")
         render_real_time_price(stock_data)
-        st.markdown("---")
 
         st.plotly_chart(plot_candlestick(st.session_state.stock_symbol,st.session_state.period))
         st.markdown("---")
